@@ -14,7 +14,8 @@ scene.background = bgTexture;
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
 const renderer = new THREE.WebGLRenderer({
-    canvas: document.querySelector('#backg')
+    canvas: document.querySelector('#backg'),
+    alpha: true
 });
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -25,6 +26,17 @@ camera.position.setY(20);
 camera.position.setZ(30);
 
 renderer.render(scene, camera);
+
+
+const canvas = renderer.domElement;
+const canvasAspect = canvas.clientWidth / canvas.clientHeight;
+const imageAspect = bgTexture.image ? bgTexture.image.width / bgTexture.image.height : 1;
+const aspect = imageAspect / canvasAspect;
+bgTexture.offset.x = aspect > 1 ? (1 - 1 / aspect) / 2 : 0;
+bgTexture.repeat.x = aspect > 1 ? 1 / aspect : 1;
+bgTexture.offset.y = aspect > 1 ? 0 : (1 - aspect) / 2;
+bgTexture.repeat.y = aspect > 1 ? 1 : aspect;
+
 
 //const tgeom = new THREE.TorusGeometry(10, 3, 16, 100);
 const geometry = new THREE.DodecahedronGeometry(10, 0);
